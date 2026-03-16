@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #00ff41; /* 经典的黑客绿 */
+            --primary-color: #00ff41;
             --bg-dark: #050505;
             --card-bg: rgba(20, 20, 20, 0.8);
             --accent-glow: rgba(0, 255, 65, 0.3);
@@ -29,7 +29,6 @@
             line-height: 1.6;
         }
 
-        /* 扫描线效果 */
         body::before {
             content: " ";
             display: block;
@@ -87,7 +86,6 @@
             margin-top: 10px;
         }
 
-        /* 极客卡片设计 */
         .content-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -169,7 +167,6 @@
             font-weight: 500;
         }
 
-        /* 标签云与图片提示 */
         .tag-container {
             margin-top: 40px;
             display: flex;
@@ -227,7 +224,6 @@
             transform: translateX(-50%) translateY(-10px);
         }
 
-        /* 交互终端样式 */
         .terminal-footer {
             margin-top: 80px;
             background: #000;
@@ -263,7 +259,6 @@
             opacity: 0.15;
         }
 
-        /* 隐藏滚动条但保留功能 */
         .terminal-footer::-webkit-scrollbar { width: 4px; }
         .terminal-footer::-webkit-scrollbar-thumb { background: #333; }
 
@@ -361,14 +356,13 @@
             <span class="prompt">root@xingxing:~$</span>
             <input type="text" id="cli-input" autocomplete="off" spellcheck="false" autofocus>
         </div>
-        <div style="margin-top: 20px; font-size: 0.7rem; color: #444; border-top: 1px solid #111; pt-10">
+        <div style="margin-top: 20px; font-size: 0.7rem; color: #444; border-top: 1px solid #111; padding-top: 10px;">
             © 2026 XINGXING_CORE. AUTHORIZED ACCESS ONLY.
         </div>
     </footer>
 </div>
 
 <script>
-    // 1. 动态时间戳
     function updateTime() {
         const now = new Date();
         document.getElementById('timestamp').textContent = now.toISOString().replace('T', ' ').substring(0, 19);
@@ -376,7 +370,6 @@
     setInterval(updateTime, 1000);
     updateTime();
 
-    // 2. 矩阵背景效果
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
     function initMatrix() {
@@ -406,7 +399,6 @@
     setInterval(drawMatrix, 40);
     window.addEventListener('resize', initMatrix);
 
-    // 3. 命令行终端逻辑
     const cliInput = document.getElementById('cli-input');
     const history = document.getElementById('terminal-history');
     const container = document.getElementById('terminal-container');
@@ -430,7 +422,6 @@
     });
 
     function executeCommand(cmd) {
-        // 命令回显
         const echo = document.createElement('div');
         echo.className = 'terminal-history-item';
         echo.innerHTML = `<span class="prompt">root@xingxing:~$</span> ${cmd}`;
@@ -452,7 +443,6 @@
             history.appendChild(output);
         }
 
-        // 自动滚动
         container.scrollTop = container.scrollHeight;
     }
 </script>
