@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xingxing | System_Architect.exe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00ff41; /* 经典的黑客绿 */
+            --bg-dark: #050505;
+            --card-bg: rgba(20, 20, 20, 0.8);
+            --accent-glow: rgba(0, 255, 65, 0.3);
+            --text-dim: #888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Fira Code', 'JetBrains Mono', monospace;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* 扫描线效果 */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 100;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            position: relative;
+        }
+
+        /* 顶部装饰：系统状态栏 */
+        .system-meta {
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--primary-color);
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            opacity: 0.7;
+        }
+
+        /* 标题打字机效果 */
+        .header {
+            margin-bottom: 80px;
+        }
+
+        .name-glitch {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .name-glitch::after {
+            content: "_";
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin-top: 10px;
+        }
+
+        /* 极客卡片设计 */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .geek-card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            padding: 0;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+
+        .geek-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        /* 卡片顶部的模拟窗口按钮 */
+        .card-header {
+            background: #1a1a1a;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .window-dots span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #333;
+            margin-right: 5px;
+        }
+
+        .geek-card:hover .window-dots span:nth-child(1) { background: #ff5f56; }
+        .geek-card:hover .window-dots span:nth-child(2) { background: #ffbd2e; }
+        .geek-card:hover .window-dots span:nth-child(3) { background: #27c93f; }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .card-title {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-title i { margin-right: 10px; font-size: 1rem; }
+
+        .code-list {
+            list-style: none;
+        }
+
+        .code-list li {
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            padding-left: 20px;
+            position: relative;
+            color: #ccc;
+        }
+
+        .code-list li::before {
+            content: ">";
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+        }
+
+        .code-list li strong {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        /* 标签云升级版 */
+        .tag-container {
+            margin-top: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .geek-tag {
+            background: transparent;
+            border: 1px solid #444;
+            color: #888;
+            padding: 5px 15px;
+            font-size: 0.85rem;
+            cursor: crosshair;
+            transition: 0.3s;
+        }
+
+        .geek-tag:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: rgba(0, 255, 65, 0.05);
+        }
+
+        /* Image tooltip for specific tag */
+        .geek-tag-with-image {
+            position: relative;
+        }
+
+        .geek-tag-with-image .image-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 15px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--primary-color);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .geek-tag-with-image .image-tooltip img {
+            max-width: 200px;
+            height: auto;
+            display: block;
+        }
+
+        .geek-tag-with-image:hover .image-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-10px);
+        }
+
+        /* Arrow for tooltip */
+        .geek-tag-with-image .image-tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px;
+            border-style: solid;
+            border-color: var(--primary-color) transparent transparent transparent;
+        }
+
+        /* 模拟控制台终端 */
+        .terminal-footer {
+            margin-top: 80px;
+            background: #000;
+            border: 1px solid #222;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .prompt { color: var(--primary-color); margin-right: 10px; }
+
+        /* 背景装饰数字流（简易版） */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.15;
+        }
+
+        @media (max-width: 768px) {
+            .name-glitch { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="matrix-canvas"></canvas>
+
+<div class="container">
+    <div class="system-meta">
+        <span>STATUS: ACTIVE</span>
+        <span>LOC: 127.0.0.1</span>
+        <span id="timestamp"></span>
+    </div>
+
+    <header class="header">
+        <h1 class="name-glitch" id="typewriter">醒醒</h1>
+        <p class="subtitle">// 全栈程序员 & AI共学社主理人</p>
+        
+        <div class="tag-container">
+            <span class="geek-tag">#FullStack</span>
+            <span class="geek-tag">#AI_Architect</span>
+            <span class="geek-tag">#Key_Opinion_Leader</span>
+            <span class="geek-tag">#Mentor</span>
+            <span class="geek-tag geek-tag-with-image">#Public: AI共学社all
+                <div class="image-tooltip">
+                    <img src="assets/gongzhonghao.png" alt="AI共学社二维码">
+                </div>
+            </span>
+        </div>
+    </header>
+
+    <div class="content-grid">
+        <div class="geek-card">
+            <div class="card-header">
+                <div class="window-dots"><span></span><span></span><span></span></div>
+                <div style="font-size: 0.7rem; color: #444;">identity.json</div>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title"><i class="fas fa-terminal"></i> 职业身份</h2>
+                <ul class="code-list">
+                    <li><strong>全栈程序员</strong>: 精通全链路开发</li>
+                    <li><strong>AI共学社主理人</strong>: 知识节点组织者</li>
+                    <li><strong>技术博主</strong>: 1w+ 追随者</li>
+                    <li><strong>开发者导师</strong>: 职业路径导航</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="geek-card">
+            <div class="card-header">
+                <div class="window-dots"><span></span><span></span><span></span></div>
+                <div style="font-size: 0.7rem; color: #444;">services.sh</div>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title"><i class="fas fa-code-branch"></i> 提供服务</h2>
+                <ul class="code-list">
+                    <li><strong>软件开发</strong>: 定制化架构方案</li>
+                    <li><strong>AI培训</strong>: 落地实战应用</li>
+                    <li><strong>自媒体咨询</strong>: 流量转化逻辑</li>
+                    <li><strong>入职陪跑</strong>: 解决 0-1 痛点</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="geek-card">
+            <div class="card-header">
+                <div class="window-dots"><span></span><span></span><span></span></div>
+                <div style="font-size: 0.7rem; color: #444;">features.env</div>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title"><i class="fas fa-microchip"></i> 服务特色</h2>
+                <ul class="code-list">
+                    <li><strong>Stack</strong>: 深度全栈实战经验</li>
+                    <li><strong>AI_Driven</strong>: 极速同步前沿技术</li>
+                    <li><strong>Community</strong>: 万粉账号运营背书</li>
+                    <li><strong>Custom</strong>: 个性化成长路线图</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- <footer class="terminal-footer">
+        <div><span class="prompt">root@xingxing:~$</span><span id="terminal-text">tail -f profile.log</span><span class="blink">_</span></div>
+        <div style="margin-top: 15px; font-size: 0.8rem;">
+            © 2026 XINGXING_CORE. All rights reserved. <br>
+            Designed for high-performance developers.
+        </div>
+    </footer> -->
+    <footer class="terminal-footer" id="terminal-container" onclick="document.getElementById('cli-input').focus()">
+    <div id="terminal-history">
+        <div><span class="prompt">root@xingxing:~$</span> Welcome to XINGXING_OS v2.0.6</div>
+        <div><span class="prompt">root@xingxing:~$</span> Type <span style="color:#fff">'help'</span> to see available commands.</div>
+    </div>
+    <div class="input-line" style="display: flex; align-items: center; margin-top: 10px;">
+        <span class="prompt">root@xingxing:~$</span>
+        <input type="text" id="cli-input" autofocus 
+               style="background: transparent; border: none; color: var(--primary-color); outline: none; font-family: inherit; font-size: inherit; width: 100%;">
+    </div>
+</footer>
+</div>
+
+<script>
+    // 1. 动态时间戳
+    function updateTime() {
+        const now = new Date();
+        document.getElementById('timestamp').textContent = now.toISOString().replace('T', ' ').substring(0, 19);
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // 2. 矩阵背景效果 (Digital Rain)
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%'\"#&_(),.;:?!\\|{}<>[]^~";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const rainDrops = Array.from({ length: columns }).fill(1);
+
+    function drawMatrix() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#0F0';
+        ctx.font = fontSize + 'px monospace';
+        for (let i = 0; i < rainDrops.length; i++) {
+            const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+            ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+            if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                rainDrops[i] = 0;
+            }
+            rainDrops[i]++;
+        }
+    }
+    setInterval(drawMatrix, 30);
+
+    // 3. 模拟终端交互逻辑
+    const terminalMsgs = [
+        "loading modules...",
+        "npm install future --save",
+        "access granted.",
+        "connecting to AI_Community...",
+        "tail -f profile.log"
+    ];
+    let msgIdx = 0;
+    function rotateTerminalText() {
+        const el = document.getElementById('terminal-text');
+        msgIdx = (msgIdx + 1) % terminalMsgs.length;
+        el.textContent = terminalMsgs[msgIdx];
+    }
+    setInterval(rotateTerminalText, 4000);
+
+    // 4. 窗口自适应
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+</script>
+</body>
+</html>
