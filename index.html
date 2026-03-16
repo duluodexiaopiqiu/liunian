@@ -49,7 +49,6 @@
             position: relative;
         }
 
-        /* 顶部装饰：系统状态栏 */
         .system-meta {
             font-size: 0.8rem;
             color: var(--primary-color);
@@ -61,7 +60,6 @@
             opacity: 0.7;
         }
 
-        /* 标题打字机效果 */
         .header {
             margin-bottom: 80px;
         }
@@ -111,7 +109,6 @@
             box-shadow: 0 0 30px var(--accent-glow);
         }
 
-        /* 卡片顶部的模拟窗口按钮 */
         .card-header {
             background: #1a1a1a;
             padding: 8px 15px;
@@ -172,7 +169,7 @@
             font-weight: 500;
         }
 
-        /* 标签云升级版 */
+        /* 标签云与图片提示 */
         .tag-container {
             margin-top: 40px;
             display: flex;
@@ -196,7 +193,6 @@
             background: rgba(0, 255, 65, 0.05);
         }
 
-        /* Image tooltip for specific tag */
         .geek-tag-with-image {
             position: relative;
         }
@@ -212,14 +208,15 @@
             transition: all 0.3s ease;
             pointer-events: none;
             z-index: 1000;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             border: 1px solid var(--primary-color);
             padding: 10px;
             border-radius: 5px;
+            box-shadow: 0 0 20px var(--accent-glow);
         }
 
         .geek-tag-with-image .image-tooltip img {
-            max-width: 200px;
+            max-width: 180px;
             height: auto;
             display: block;
         }
@@ -230,31 +227,34 @@
             transform: translateX(-50%) translateY(-10px);
         }
 
-        /* Arrow for tooltip */
-        .geek-tag-with-image .image-tooltip::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 8px;
-            border-style: solid;
-            border-color: var(--primary-color) transparent transparent transparent;
-        }
-
-        /* 模拟控制台终端 */
+        /* 交互终端样式 */
         .terminal-footer {
             margin-top: 80px;
             background: #000;
-            border: 1px solid #222;
+            border: 1px solid #333;
             padding: 20px;
-            font-size: 0.9rem;
-            color: #666;
+            font-size: 0.95rem;
+            color: #ccc;
+            max-height: 400px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.1);
         }
 
-        .prompt { color: var(--primary-color); margin-right: 10px; }
+        .prompt { color: var(--primary-color); margin-right: 10px; font-weight: bold; }
 
-        /* 背景装饰数字流（简易版） */
+        .terminal-history-item { margin-bottom: 8px; white-space: pre-wrap; word-break: break-all; }
+        .command-output { color: #888; padding-left: 15px; margin-bottom: 15px; border-left: 2px solid #222; }
+
+        #cli-input {
+            background: transparent;
+            border: none;
+            color: var(--primary-color);
+            outline: none;
+            font-family: inherit;
+            font-size: inherit;
+            width: 70%;
+        }
+
         #matrix-canvas {
             position: fixed;
             top: 0;
@@ -262,6 +262,10 @@
             z-index: -1;
             opacity: 0.15;
         }
+
+        /* 隐藏滚动条但保留功能 */
+        .terminal-footer::-webkit-scrollbar { width: 4px; }
+        .terminal-footer::-webkit-scrollbar-thumb { background: #333; }
 
         @media (max-width: 768px) {
             .name-glitch { font-size: 2.5rem; }
@@ -280,7 +284,7 @@
     </div>
 
     <header class="header">
-        <h1 class="name-glitch" id="typewriter">醒醒</h1>
+        <h1 class="name-glitch">醒醒</h1>
         <p class="subtitle">// 全栈程序员 & AI共学社主理人</p>
         
         <div class="tag-container">
@@ -288,9 +292,10 @@
             <span class="geek-tag">#AI_Architect</span>
             <span class="geek-tag">#Key_Opinion_Leader</span>
             <span class="geek-tag">#Mentor</span>
-            <span class="geek-tag geek-tag-with-image">#Public: AI共学社all
+            <span class="geek-tag geek-tag-with-image">#Public: AI共学社
                 <div class="image-tooltip">
-                    <img src="assets/gongzhonghao.png" alt="AI共学社二维码">
+                    <img src="assets/gongzhonghao.png" alt="微信搜：AI共学社">
+                    <div style="font-size: 10px; color: var(--primary-color); text-align: center; margin-top: 5px;">微信扫码关注</div>
                 </div>
             </span>
         </div>
@@ -346,24 +351,20 @@
         </div>
     </div>
 
-    <!-- <footer class="terminal-footer">
-        <div><span class="prompt">root@xingxing:~$</span><span id="terminal-text">tail -f profile.log</span><span class="blink">_</span></div>
-        <div style="margin-top: 15px; font-size: 0.8rem;">
-            © 2026 XINGXING_CORE. All rights reserved. <br>
-            Designed for high-performance developers.
-        </div>
-    </footer> -->
     <footer class="terminal-footer" id="terminal-container" onclick="document.getElementById('cli-input').focus()">
-    <div id="terminal-history">
-        <div><span class="prompt">root@xingxing:~$</span> Welcome to XINGXING_OS v2.0.6</div>
-        <div><span class="prompt">root@xingxing:~$</span> Type <span style="color:#fff">'help'</span> to see available commands.</div>
-    </div>
-    <div class="input-line" style="display: flex; align-items: center; margin-top: 10px;">
-        <span class="prompt">root@xingxing:~$</span>
-        <input type="text" id="cli-input" autofocus 
-               style="background: transparent; border: none; color: var(--primary-color); outline: none; font-family: inherit; font-size: inherit; width: 100%;">
-    </div>
-</footer>
+        <div id="terminal-history">
+            <div class="terminal-history-item"><span class="prompt">root@xingxing:~$</span> Welcome to XINGXING_OS v2.0.6 (Build 2026-Stable)</div>
+            <div class="terminal-history-item"><span class="prompt">root@xingxing:~$</span> 系统初始化完成...</div>
+            <div class="terminal-history-item"><span class="prompt">root@xingxing:~$</span> 输入 <span style="color:#fff">'help'</span> 获取可用指令列表。</div>
+        </div>
+        <div class="input-line" style="display: flex; align-items: center;">
+            <span class="prompt">root@xingxing:~$</span>
+            <input type="text" id="cli-input" autocomplete="off" spellcheck="false" autofocus>
+        </div>
+        <div style="margin-top: 20px; font-size: 0.7rem; color: #444; border-top: 1px solid #111; pt-10">
+            © 2026 XINGXING_CORE. AUTHORIZED ACCESS ONLY.
+        </div>
+    </footer>
 </div>
 
 <script>
@@ -375,14 +376,17 @@
     setInterval(updateTime, 1000);
     updateTime();
 
-    // 2. 矩阵背景效果 (Digital Rain)
+    // 2. 矩阵背景效果
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%'\"#&_(),.;:?!\\|{}<>[]^~";
+    function initMatrix() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    initMatrix();
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()";
     const fontSize = 16;
-    const columns = canvas.width / fontSize;
+    const columns = Math.floor(canvas.width / fontSize);
     const rainDrops = Array.from({ length: columns }).fill(1);
 
     function drawMatrix() {
@@ -399,29 +403,58 @@
             rainDrops[i]++;
         }
     }
-    setInterval(drawMatrix, 30);
+    setInterval(drawMatrix, 40);
+    window.addEventListener('resize', initMatrix);
 
-    // 3. 模拟终端交互逻辑
-    const terminalMsgs = [
-        "loading modules...",
-        "npm install future --save",
-        "access granted.",
-        "connecting to AI_Community...",
-        "tail -f profile.log"
-    ];
-    let msgIdx = 0;
-    function rotateTerminalText() {
-        const el = document.getElementById('terminal-text');
-        msgIdx = (msgIdx + 1) % terminalMsgs.length;
-        el.textContent = terminalMsgs[msgIdx];
-    }
-    setInterval(rotateTerminalText, 4000);
+    // 3. 命令行终端逻辑
+    const cliInput = document.getElementById('cli-input');
+    const history = document.getElementById('terminal-history');
+    const container = document.getElementById('terminal-container');
 
-    // 4. 窗口自适应
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+    const commands = {
+        'help': 'Available commands: [whoami] [services] [ls] [clear] [stats] [sudo contact] [date]',
+        'whoami': '{\n  "id": "xingxing",\n  "name": "醒醒",\n  "role": "Full-Stack Engineer & AI Leader",\n  "motto": "Keep coding, keep dreaming."\n}',
+        'services': '>> Fetching Service Stack:\n1. Full-stack Project Development\n2. Enterprise AI Training\n3. Media Growth Consulting\n4. 1-on-1 Mentorship',
+        'ls': 'identity.json  services.sh  features.env  secret_key.gpg  qr_code.png',
+        'stats': 'Fans: 10,000+\nProjects: 50+\nAI Community Members: 2000+\nUptime: 99.9%',
+        'date': new Date().toString(),
+        'sudo contact': '>>> BYPASSING SECURITY...\n>>> ACCESS GRANTED.\n[CONTACT]: 微信搜索公众号 "AI共学社" 或扫描上方悬停二维码。'
+    };
+
+    cliInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            const val = this.value.trim().toLowerCase();
+            executeCommand(val);
+            this.value = '';
+        }
     });
+
+    function executeCommand(cmd) {
+        // 命令回显
+        const echo = document.createElement('div');
+        echo.className = 'terminal-history-item';
+        echo.innerHTML = `<span class="prompt">root@xingxing:~$</span> ${cmd}`;
+        history.appendChild(echo);
+
+        const output = document.createElement('div');
+        output.className = 'command-output';
+
+        if (cmd === '') {
+            // Do nothing
+        } else if (cmd === 'clear') {
+            history.innerHTML = '';
+        } else if (commands[cmd]) {
+            output.textContent = commands[cmd];
+            history.appendChild(output);
+        } else {
+            output.textContent = `Command not found: ${cmd}. Type 'help' for support.`;
+            output.style.color = '#ff5f56';
+            history.appendChild(output);
+        }
+
+        // 自动滚动
+        container.scrollTop = container.scrollHeight;
+    }
 </script>
 </body>
 </html>
